@@ -1,0 +1,12 @@
+.env
+/.scrapy
+*.pyc
+*.sw?
+cache
+__pycache__
+build
+*.egg-info
+venv
+
+.idea
+.vscode

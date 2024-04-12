@@ -1,0 +1,33 @@
+import re
+import w3lib.html
+
+def text(s):
+    """Clean up text from page"""
+    if not s: return None
+    s = w3lib.html.remove_tags(s)
+    s = re.sub(r'\s+', ' ', s) # squash whitespace
+    return s.strip()
+
+def html(s):
+    """Clean up HTML from page"""
+    if not s: return None
+    # omit outer element
+    s = re.sub(r'^\s*<[^>]+>(.*)<\/[^>]+>\s*$', r'\1', s, flags=re.DOTALL)
+    return s.strip()
+
+def strip_hash(url):
+    """Strip any hash from the URL given"""
+    if not url: return None
+    url = re.sub(r'#.*$', '', url)
+    return url
+
+def strip_qs(url):
+    """Strip any hash from the URL given"""
+    if not url: return None
+    url = re.sub(r'\?.*$', '', url)
+    return url
+
+def strip_hash_qs(url):
+    """Strip any hash and querystring from the URL given"""
+    if not url: return None
+    return strip_qs(strip_hash(url))
