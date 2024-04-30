@@ -31,3 +31,10 @@ def strip_hash_qs(url):
     """Strip any hash and querystring from the URL given"""
     if not url: return None
     return strip_qs(strip_hash(url))
+
+# based on https://github.com/scrapy/scrapy/issues/3613#issuecomment-473443247
+def apply_priority(priority):
+    """Return a function to apply a priority to existing request, useful for CrawlSpider rules"""
+    def process_request(request, spider):
+        return request.replace(priority=priority)
+    return process_request

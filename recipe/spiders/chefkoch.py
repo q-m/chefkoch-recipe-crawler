@@ -2,7 +2,7 @@ import json
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 
-from ..util import text, html, strip_hash_qs
+from ..util import text, html, strip_hash_qs, apply_priority
 
 
 class ChefkochSpider(CrawlSpider):
@@ -26,7 +26,8 @@ class ChefkochSpider(CrawlSpider):
                 # omit plus recipes, for which we have no access
                 restrict_css='*:not([data-vars-payed-content-type=plus_recipe]) > a'
             ),
-            callback='parse_recipe'
+            callback='parse_recipe',
+            process_request=apply_priority(10)
         )
     )
 
