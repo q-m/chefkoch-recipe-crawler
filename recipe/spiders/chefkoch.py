@@ -1,5 +1,5 @@
 import json
-from scrapy.spiders import CrawlSpider, Rule
+from scrapy.spiders import CrawlSpider, Rule, Request
 from scrapy.linkextractors import LinkExtractor
 
 from ..util import text, html, strip_hash_qs, apply_priority
@@ -30,6 +30,15 @@ class ChefkochSpider(CrawlSpider):
             process_request=apply_priority(10)
         )
     )
+
+    def start_requests(self):
+        recipe_urls = self.settings.get('RECIPE_URLS')
+        if recipe_urls is not None:
+            self.logger.info('Seeding from file %s' % recipe_urls)
+            for line in open(recipe_urls):
+                yield Request(url=line.strip(), callback=self.parse_recipe, dont_filter=True)
+        else:
+            for r in super().start_requests(): yield r
 
     def parse_recipe(self, response):
         return {

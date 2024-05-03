@@ -44,6 +44,20 @@ are saved to `recipes.log` (relevant for checking errors).
 All requests and responses are cached in `.scrapy/httpcache/`. If you want to work on fresh
 data, which is then fetched all anew from the website again, remove that directory.
 
+### Getting specific recipes
+
+There is a long collection of categories to traverse. We are only interested in the recipes
+themselves. To get all discovered recipes, one can set the `RECIPE_URLS` setting to a file
+containing recipe URLs to crawl, e.g.:
+
+
+```sh
+cat recipes.jsonl | jq -r '.url' >urls
+cat recipes.log | sed 's/ $//;s/^.*Ignoring link (depth > [0-9]\+): //p;d' | grep '/rezepte/' >>urls
+cat urls | sort | uniq >urls.uniq
+scrapy crawl chefkoch -s RECIPE_URLS=urls.uniq -s DEPTH_LIMIT=0 # ...
+```
+
 
 ## Transform
 
